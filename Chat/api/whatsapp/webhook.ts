@@ -1,5 +1,4 @@
-import crypto from 'node:crypto'
-import { store } from '../_lib/store'
+// Note: Lazy import store only in POST handler to avoid side-effects during GET verification
 
 function text(body: string, status = 200) {
   return new Response(body, { status, headers: { 'Content-Type': 'text/plain' } })
@@ -21,15 +20,25 @@ export default async function handler(req: Request): Promise<Response> {
   }
 
   if (req.method === 'POST') {
+    const { store } = await import('../_lib/store')
     const raw = await req.text()
     const appSecret = process.env.WHATSAPP_APP_SECRET
     if (appSecret) {
       const sig = req.headers.get('x-hub-signature-256') || ''
-      const h = crypto.createHmac('sha256', appSecret)
-      h.update(raw, 'utf8')
-      const expected = 'sha256=' + h.digest('hex')
-      const ok = crypto.timingSafeEqual(Buffer.from(sig), Buffer.from(expected))
-      if (!ok) return new Response(JSON.stringify({ ok: false, error: 'invalid_signature' }), { status: 403 })
+      const enc = new TextEncoder()
+      const key = await crypto.subtle.importKey(
+        'raw',
+        enc.encode(appSecret),
+        { name: 'HMAC', hash: 'SHA-256' },
+        false,
+        ['sign']
+      )
+      const signature = await crypto.subtle.sign('HMAC', key, enc.encode(raw))
+      const hex = Array.from(new Uint8Array(signature)).map(b => b.toString(16).padStart(2, '0')).join('')
+      const expected = 'sha256=' + hex
+      if (sig !== expected) {
+        return new Response(JSON.stringify({ ok: false, error: 'invalid_signature' }), { status: 403, headers: { 'Content-Type': 'application/json' } })
+      }
     }
 
     let json: any = {}
@@ -44,7 +53,7 @@ export default async function handler(req: Request): Promise<Response> {
           const value = ch.value || {}
           const messages: any[] = value.messages || []
           for (const m of messages) {
-            const id = m.id || crypto.randomUUID()
+            const id = m.id || (typeof crypto.randomUUID === 'function' ? crypto.randomUUID() : String(Date.now()))
             const from = m.from
             const type = m.type || 'text'
             const text = type === 'text' ? (m.text?.body || '') : '[non-text message]'
