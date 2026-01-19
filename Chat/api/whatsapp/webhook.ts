@@ -5,6 +5,8 @@ function text(body: string, status = 200) {
   return new Response(body, { status, headers: { 'Content-Type': 'text/plain' } })
 }
 
+export const config = { runtime: 'edge' }
+
 export default async function handler(req: Request): Promise<Response> {
   const url = new URL(req.url)
   if (req.method === 'GET') {
