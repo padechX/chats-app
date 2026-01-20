@@ -6,3 +6,4 @@ export default async function handler(): Promise<Response> {
     headers: { 'Content-Type': 'application/json' },
   })
 }
+// nudge: minor change for deployment trigger
