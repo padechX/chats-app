@@ -68,6 +68,11 @@ export default async function handler(req: Request): Promise<Response> {
       if (hasKV) await kvSet('wa:phone_number_id', phone_number_id)
       else mem['wa:phone_number_id'] = phone_number_id
     }
+    try {
+      const { store } = await import('../../_lib/store')
+      const id = (typeof crypto.randomUUID === 'function') ? crypto.randomUUID() : `connected-${Date.now()}`
+      await store.putMessage({ id, timestamp: Date.now(), from: 'system', to: undefined, type: 'text', text: 'Conectado a WhatsApp', status: 'pending', raw: { type: 'system', event: 'whatsapp_connected' } })
+    } catch {}
     return new Response(JSON.stringify({ ok: true, kv: hasKV }), { status: 200, headers: { 'Content-Type': 'application/json' } })
   }
 
