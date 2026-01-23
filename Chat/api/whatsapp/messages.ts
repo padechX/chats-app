@@ -22,8 +22,8 @@ export default async function handler(req: Request): Promise<Response> {
     const id = b?.id || crypto.randomUUID()
     const text = String(b?.text || 'test')
     await store.putMessage({ id, timestamp: Date.now(), from: b?.from, to: b?.to, type: 'text', text, status: 'pending', raw: b })
-    return new Response(JSON.stringify({ ok: true, id }), { status: 200, headers: { 'Content-Type': 'application/json' } })
+    return new Response(JSON.stringify({ ok: true, id }), { status: 200, headers: { 'Content-Type': 'application/json', ...CORS } as any })
   }
-  return new Response('method_not_allowed', { status: 405 })
+  return new Response('method_not_allowed', { status: 405, headers: { ...CORS } as any })
 }
 // nudge: deployment trigger
