@@ -1,4 +1,5 @@
 export const config = { runtime: 'edge' }
+declare const process: any
 
 // Minimal admin endpoint to configure WhatsApp credentials on the backend.
 // Protect with X-Admin-Secret header that must match process.env.ADMIN_SECRET.

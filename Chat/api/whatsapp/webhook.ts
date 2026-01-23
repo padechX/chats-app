@@ -1,4 +1,5 @@
 // Note: Lazy import store only in POST handler to avoid side-effects during GET verification
+declare const process: any
 
 function text(body: string, status = 200) {
   return new Response(body, { status, headers: { 'Content-Type': 'text/plain' } })
@@ -20,7 +21,7 @@ export default async function handler(req: Request): Promise<Response> {
   }
 
   if (req.method === 'POST') {
-    const { store } = await import('../_lib/store')
+    const { store } = await import('../_lib/store.js')
     const raw = await req.text()
     const appSecret = process.env.WHATSAPP_APP_SECRET
     if (appSecret) {
