@@ -26,10 +26,12 @@ export default async function handler(req: Request): Promise<Response> {
   try {
     const body = await req.json().catch(() => ({} as any))
     const to = String(body?.to || '').trim()
-    const text = String(body?.text || '').trim()
+    // Accept either `text` as string or `{ text: string }` in body.message
+    const text = String((typeof body?.text === 'string' ? body.text : body?.message) || '').trim()
     if (!to || !text) return new Response(JSON.stringify({ ok: false, error: 'invalid_params' }), { status: 400, headers: { 'Content-Type': 'application/json', ...CORS_HEADERS } as any })
 
-    const version = process.env.WHATSAPP_GRAPH_VERSION || 'v19.0'
+    const kvVersion = await kvGet('wa:graph_version')
+    const version = kvVersion || process.env.WHATSAPP_GRAPH_VERSION || 'v24.0'
     const kvToken = await kvGet('wa:access_token')
     const kvPhone = await kvGet('wa:phone_number_id')
     const token = kvToken || process.env.WHATSAPP_TOKEN

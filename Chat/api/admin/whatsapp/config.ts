@@ -9,6 +9,7 @@ declare const process: any
 type Body = {
   access_token?: string
   phone_number_id?: string
+  graph_version?: string
 }
 
 const KV_URL = (process as any)?.env?.KV_REST_API_URL
@@ -56,9 +57,11 @@ export default async function handler(req: Request): Promise<Response> {
   if (method === 'GET') {
     const access_token = hasKV ? await kvGet<string>('wa:access_token') : mem['wa:access_token']
     const phone_number_id = hasKV ? await kvGet<string>('wa:phone_number_id') : mem['wa:phone_number_id']
+    const graph_version = hasKV ? await kvGet<string>('wa:graph_version') : mem['wa:graph_version']
     return new Response(JSON.stringify({
       access_token: access_token ? (access_token.slice(0, 6) + '...' + access_token.slice(-4)) : null,
       phone_number_id: phone_number_id || null,
+      graph_version: graph_version || null,
       kv: hasKV,
     }), { status: 200, headers: { 'Content-Type': 'application/json', ...CORS } as any })
   }
@@ -66,9 +69,9 @@ export default async function handler(req: Request): Promise<Response> {
   if (method === 'POST') {
     let body: Body
     try { body = await req.json() } catch { return new Response(JSON.stringify({ error: 'invalid_json' }), { status: 400, headers: { 'Content-Type': 'application/json', ...CORS } as any }) }
-    const { access_token, phone_number_id } = body
-    if (!access_token && !phone_number_id) {
-      return new Response(JSON.stringify({ error: 'missing_fields', required: ['access_token', 'phone_number_id'] }), { status: 400, headers: { 'Content-Type': 'application/json', ...CORS } as any })
+    const { access_token, phone_number_id, graph_version } = body
+    if (!access_token && !phone_number_id && !graph_version) {
+      return new Response(JSON.stringify({ error: 'missing_fields', required: ['access_token', 'phone_number_id', 'graph_version'] }), { status: 400, headers: { 'Content-Type': 'application/json', ...CORS } as any })
     }
     if (access_token) {
       if (hasKV) await kvSet('wa:access_token', access_token)
@@ -77,6 +80,10 @@ export default async function handler(req: Request): Promise<Response> {
     if (phone_number_id) {
       if (hasKV) await kvSet('wa:phone_number_id', phone_number_id)
       else mem['wa:phone_number_id'] = phone_number_id
+    }
+    if (graph_version) {
+      if (hasKV) await kvSet('wa:graph_version', graph_version)
+      else mem['wa:graph_version'] = graph_version
     }
     try {
       const { store } = await import('../../_lib/store.js')
