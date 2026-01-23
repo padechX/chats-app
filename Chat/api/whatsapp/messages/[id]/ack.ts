@@ -1,4 +1,4 @@
-import { store } from '../../../_lib/store'
+import { store } from '../../../_lib/store.js'
 
 export default async function handler(req: Request): Promise<Response> {
   if (req.method !== 'POST') return new Response('method_not_allowed', { status: 405 })

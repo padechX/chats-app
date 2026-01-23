@@ -1,5 +1,6 @@
 // Simple storage adapter with in-memory fallback.
 // In Vercel, set KV_REST_API_URL and KV_REST_API_TOKEN to enable persistence later.
+declare const process: any
 
 export type Message = {
   id: string
@@ -24,8 +25,8 @@ const mem = {
 }
 
 // Simple KV over Upstash REST (Vercel KV). Only if env vars exist.
-const KV_URL = process.env.KV_REST_API_URL
-const KV_TOKEN = process.env.KV_REST_API_TOKEN
+const KV_URL = process.env?.KV_REST_API_URL
+const KV_TOKEN = process.env?.KV_REST_API_TOKEN
 const hasKV = Boolean(KV_URL && KV_TOKEN)
 
 async function kvFetch(path: string, init?: RequestInit) {
