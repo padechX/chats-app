@@ -2,6 +2,12 @@ export const config = { runtime: 'edge' }
 
 declare const process: any
 
+const CORS_HEADERS = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+}
+
 async function kvGet(key: string): Promise<any | null> {
   const KV_URL = process.env.KV_REST_API_URL
   const KV_TOKEN = process.env.KV_REST_API_TOKEN
@@ -13,28 +19,31 @@ async function kvGet(key: string): Promise<any | null> {
 }
 
 export default async function handler(req: Request): Promise<Response> {
-  if (req.method !== 'POST') return new Response('method_not_allowed', { status: 405 })
+  if (req.method === 'OPTIONS') {
+    return new Response(null, { status: 204, headers: CORS_HEADERS as any })
+  }
+  if (req.method !== 'POST') return new Response('method_not_allowed', { status: 405, headers: { ...CORS_HEADERS, 'Allow': 'POST, OPTIONS' } as any })
   try {
     const body = await req.json().catch(() => ({} as any))
     const to = String(body?.to || '').trim()
     const text = String(body?.text || '').trim()
-    if (!to || !text) return new Response(JSON.stringify({ ok: false, error: 'invalid_params' }), { status: 400, headers: { 'Content-Type': 'application/json' } })
+    if (!to || !text) return new Response(JSON.stringify({ ok: false, error: 'invalid_params' }), { status: 400, headers: { 'Content-Type': 'application/json', ...CORS_HEADERS } as any })
 
     const version = process.env.WHATSAPP_GRAPH_VERSION || 'v19.0'
     const kvToken = await kvGet('wa:access_token')
     const kvPhone = await kvGet('wa:phone_number_id')
     const token = kvToken || process.env.WHATSAPP_TOKEN
     const phoneNumberId = kvPhone || process.env.WHATSAPP_PHONE_NUMBER_ID
-    if (!token || !phoneNumberId) return new Response(JSON.stringify({ ok: false, error: 'not_configured' }), { status: 500, headers: { 'Content-Type': 'application/json' } })
+    if (!token || !phoneNumberId) return new Response(JSON.stringify({ ok: false, error: 'not_configured' }), { status: 500, headers: { 'Content-Type': 'application/json', ...CORS_HEADERS } as any })
 
     const url = `https://graph.facebook.com/${version}/${phoneNumberId}/messages`
     const payload = { messaging_product: 'whatsapp', to, type: 'text', text: { body: text } }
     const r = await fetch(url, { method: 'POST', headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
     const resp = await r.json().catch(async () => ({ raw: await r.text().catch(() => '') }))
-    if (!r.ok) return new Response(JSON.stringify({ ok: false, status: r.status, response: resp }), { status: r.status, headers: { 'Content-Type': 'application/json' } })
-    return new Response(JSON.stringify({ ok: true, data: resp }), { status: 200, headers: { 'Content-Type': 'application/json' } })
+    if (!r.ok) return new Response(JSON.stringify({ ok: false, status: r.status, response: resp }), { status: r.status, headers: { 'Content-Type': 'application/json', ...CORS_HEADERS } as any })
+    return new Response(JSON.stringify({ ok: true, data: resp }), { status: 200, headers: { 'Content-Type': 'application/json', ...CORS_HEADERS } as any })
   } catch (e: any) {
-    return new Response(JSON.stringify({ ok: false, error: 'send_failed', message: String(e?.message || e || 'unknown') }), { status: 500, headers: { 'Content-Type': 'application/json' } })
+    return new Response(JSON.stringify({ ok: false, error: 'send_failed', message: String(e?.message || e || 'unknown') }), { status: 500, headers: { 'Content-Type': 'application/json', ...CORS_HEADERS } as any })
   }
 }
 // nudge: deployment trigger
