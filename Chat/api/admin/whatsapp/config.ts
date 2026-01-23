@@ -38,9 +38,18 @@ let mem: Record<string, any> = {}
 
 export default async function handler(req: Request): Promise<Response> {
   const method = req.method
+  const CORS = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, X-Admin-Secret',
+  }
+
+  if (method === 'OPTIONS') {
+    return new Response(null, { status: 204, headers: CORS as any })
+  }
   const sec = req.headers.get('X-Admin-Secret') || ''
   if (!ADMIN_SECRET || sec !== ADMIN_SECRET) {
-    return new Response(JSON.stringify({ error: 'unauthorized' }), { status: 401, headers: { 'Content-Type': 'application/json' } })
+    return new Response(JSON.stringify({ error: 'unauthorized' }), { status: 401, headers: { 'Content-Type': 'application/json', ...CORS } as any })
   }
 
   if (method === 'GET') {
@@ -50,15 +59,15 @@ export default async function handler(req: Request): Promise<Response> {
       access_token: access_token ? (access_token.slice(0, 6) + '...' + access_token.slice(-4)) : null,
       phone_number_id: phone_number_id || null,
       kv: hasKV,
-    }), { status: 200, headers: { 'Content-Type': 'application/json' } })
+    }), { status: 200, headers: { 'Content-Type': 'application/json', ...CORS } as any })
   }
 
   if (method === 'POST') {
     let body: Body
-    try { body = await req.json() } catch { return new Response(JSON.stringify({ error: 'invalid_json' }), { status: 400, headers: { 'Content-Type': 'application/json' } }) }
+    try { body = await req.json() } catch { return new Response(JSON.stringify({ error: 'invalid_json' }), { status: 400, headers: { 'Content-Type': 'application/json', ...CORS } as any }) }
     const { access_token, phone_number_id } = body
     if (!access_token && !phone_number_id) {
-      return new Response(JSON.stringify({ error: 'missing_fields', required: ['access_token', 'phone_number_id'] }), { status: 400, headers: { 'Content-Type': 'application/json' } })
+      return new Response(JSON.stringify({ error: 'missing_fields', required: ['access_token', 'phone_number_id'] }), { status: 400, headers: { 'Content-Type': 'application/json', ...CORS } as any })
     }
     if (access_token) {
       if (hasKV) await kvSet('wa:access_token', access_token)
@@ -73,8 +82,8 @@ export default async function handler(req: Request): Promise<Response> {
       const id = (typeof crypto.randomUUID === 'function') ? crypto.randomUUID() : `connected-${Date.now()}`
       await store.putMessage({ id, timestamp: Date.now(), from: 'system', to: undefined, type: 'text', text: 'Conectado a WhatsApp', status: 'pending', raw: { type: 'system', event: 'whatsapp_connected' } })
     } catch {}
-    return new Response(JSON.stringify({ ok: true, kv: hasKV }), { status: 200, headers: { 'Content-Type': 'application/json' } })
+    return new Response(JSON.stringify({ ok: true, kv: hasKV }), { status: 200, headers: { 'Content-Type': 'application/json', ...CORS } as any })
   }
 
-  return new Response(JSON.stringify({ error: 'method_not_allowed' }), { status: 405, headers: { 'Allow': 'GET, POST', 'Content-Type': 'application/json' } })
+  return new Response(JSON.stringify({ error: 'method_not_allowed' }), { status: 405, headers: { 'Allow': 'GET, POST, OPTIONS', 'Content-Type': 'application/json', ...CORS } as any })
 }
