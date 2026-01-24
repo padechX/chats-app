@@ -24,9 +24,22 @@ export default async function handler(req: Request): Promise<Response> {
   }
   if (req.method !== 'POST') return new Response('method_not_allowed', { status: 405, headers: { ...CORS_HEADERS, 'Allow': 'POST, OPTIONS' } as any })
   try {
-    const body = await req.json().catch(() => ({} as any))
+    // Accept JSON (application/json), text/plain (JSON string), or x-www-form-urlencoded
+    const ct = (req.headers.get('content-type') || '').toLowerCase()
+    let body: any = {}
+    if (ct.includes('application/json')) {
+      body = await req.json().catch(() => ({} as any))
+    } else if (ct.includes('application/x-www-form-urlencoded')) {
+      const raw = await req.text().catch(() => '')
+      const params = new URLSearchParams(raw)
+      body = Object.fromEntries(params.entries())
+    } else {
+      // text/plain or missing: try parse as JSON string, fallback to empty
+      const raw = await req.text().catch(() => '')
+      try { body = raw ? JSON.parse(raw) : {} } catch { body = {} }
+    }
     const to = String(body?.to || '').trim()
-    // Accept either `text` as string or `{ text: string }` in body.message
+    // Accept either `text` as string or alias `message`
     const text = String((typeof body?.text === 'string' ? body.text : body?.message) || '').trim()
     if (!to || !text) return new Response(JSON.stringify({ ok: false, error: 'invalid_params' }), { status: 400, headers: { 'Content-Type': 'application/json', ...CORS_HEADERS } as any })
 
