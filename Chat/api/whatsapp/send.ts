@@ -24,23 +24,31 @@ export default async function handler(req: Request): Promise<Response> {
   }
   if (req.method !== 'POST') return new Response('method_not_allowed', { status: 405, headers: { ...CORS_HEADERS, 'Allow': 'POST, OPTIONS' } as any })
   try {
-    // Accept JSON (application/json), text/plain (JSON string), or x-www-form-urlencoded
-    const ct = (req.headers.get('content-type') || '').toLowerCase()
-    let body: any = {}
+    // Parse body supporting application/json, application/x-www-form-urlencoded and text/plain
+    const ct = (req.headers.get('Content-Type') || '').toLowerCase()
+    let to = ''
+    let text = ''
     if (ct.includes('application/json')) {
-      body = await req.json().catch(() => ({} as any))
-    } else if (ct.includes('application/x-www-form-urlencoded')) {
-      const raw = await req.text().catch(() => '')
-      const params = new URLSearchParams(raw)
-      body = Object.fromEntries(params.entries())
+      const body = await req.json().catch(() => ({} as any))
+      to = String(body?.to || '').trim()
+      text = String((typeof body?.text === 'string' ? body.text : body?.message) || '').trim()
     } else {
-      // text/plain or missing: try parse as JSON string, fallback to empty
       const raw = await req.text().catch(() => '')
-      try { body = raw ? JSON.parse(raw) : {} } catch { body = {} }
+      if (raw && (ct.includes('application/x-www-form-urlencoded') || ct.includes('text/plain'))) {
+        // Try URLSearchParams first (supports to=..&text=..)
+        const sp = new URLSearchParams(raw)
+        to = (sp.get('to') || '').trim()
+        text = (sp.get('text') || sp.get('message') || '').trim()
+        if (!to && !text) {
+          // Fallback: if someone sent JSON as text/plain
+          try {
+            const j = JSON.parse(raw)
+            to = String(j?.to || '').trim()
+            text = String((typeof j?.text === 'string' ? j.text : j?.message) || '').trim()
+          } catch {}
+        }
+      }
     }
-    const to = String(body?.to || '').trim()
-    // Accept either `text` as string or alias `message`
-    const text = String((typeof body?.text === 'string' ? body.text : body?.message) || '').trim()
     if (!to || !text) return new Response(JSON.stringify({ ok: false, error: 'invalid_params' }), { status: 400, headers: { 'Content-Type': 'application/json', ...CORS_HEADERS } as any })
 
     const kvVersion = await kvGet('wa:graph_version')
