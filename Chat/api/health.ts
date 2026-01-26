@@ -1,4 +1,4 @@
-export const config = { runtime: 'nodejs' }
+export const runtime = 'nodejs'
 
 export default async function handler(req: Request): Promise<Response> {
   const CORS = {
