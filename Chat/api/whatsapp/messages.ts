@@ -15,7 +15,7 @@ export default async function handler(req: Request): Promise<Response> {
     const status = (url.searchParams.get('status') as 'pending' | 'processed') || 'pending'
     const data = await store.listMessages(status)
     return new Response(JSON.stringify({ ok: true, data }), { status: 200, headers: { 'Content-Type': 'application/json', ...CORS } as any })
-  }
+  } 
   if (req.method === 'POST') {
     // test helper to insert a message manually
     const b = await req.json().catch(() => ({} as any))

@@ -19,7 +19,7 @@ export default async function handler(req: Request): Promise<Response> {
     }
     return text('forbidden', 403)
   }
-
+ 
   if (req.method === 'POST') {
     const { store } = await import('../_lib/store.js')
     const raw = await req.text()

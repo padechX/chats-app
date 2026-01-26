@@ -1,4 +1,4 @@
-export const config = { runtime: 'edge' }
+export const config = { runtime: 'nodejs' }
 
 declare const process: any
 
@@ -16,7 +16,7 @@ async function kvGet(key: string): Promise<any | null> {
   if (!r.ok) return null
   const js: any = await r.json().catch(() => null)
   try { return js?.result ? JSON.parse(js.result) : null } catch { return null }
-}
+} 
 
 export default async function handler(req: Request): Promise<Response> {
   if (req.method === 'OPTIONS') {

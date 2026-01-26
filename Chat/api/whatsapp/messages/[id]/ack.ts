@@ -9,3 +9,4 @@ export default async function handler(req: Request): Promise<Response> {
   const ok = await store.markProcessed(id)
   return new Response(JSON.stringify({ ok }), { status: ok ? 200 : 404, headers: { 'Content-Type': 'application/json' } })
 }
+ 
