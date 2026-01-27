@@ -4,10 +4,15 @@
   "version": "0.1.0",
   "type": "module",
   "dependencies": {
-    "undici": "^6.18.2"
+    "undici": "^6.18.2",
+    "@prisma/client": "^5.10.0"
   },
   "devDependencies": {
     "@types/node": "^20.11.30",
-    "typescript": "^5.4.5"
+    "typescript": "^5.4.5",
+    "prisma": "^5.10.0"
+  },
+  "scripts": {
+    "postinstall": "prisma generate"
   }
 }

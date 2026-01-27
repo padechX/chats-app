@@ -10,6 +10,18 @@ const CORS_HEADERS = {
   'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Hub-Signature-256',
 }
 
+// Lazy Prisma loader (optional). If Prisma is not available or DATABASE_URL is not set,
+// getPrisma() will resolve to null and we fallback to console logging only.
+async function getPrisma() {
+  try {
+    // @ts-ignore - dynamic import to avoid bundling when not installed
+    const mod = await import('../_lib/prisma.js')
+    return await mod.getPrisma()
+  } catch {
+    return null
+  }
+}
+
 function verifyWebhookSignature(body: string, signature: string | null): boolean {
   if (!signature) return false
   const appSecret = process.env.WHATSAPP_APP_SECRET
@@ -25,25 +37,47 @@ function verifyWebhookSignature(body: string, signature: string | null): boolean
 }
 
 async function persistMessage(message: any): Promise<void> {
-  // TODO: Implementar con Prisma ORM
-  // await prisma.messages.create({
-  //   data: {
-  //     to: message.to,
-  //     from: message.from,
-  //     text: message.text?.body || '',
-  //     wamid: message.id,
-  //     status: 'received',
-  //   }
-  // })
+  const prisma = await getPrisma()
+  if (prisma) {
+    try {
+      await prisma.message.upsert({
+        where: { wamid: message.id },
+        update: {
+          from: String(message.from || ''),
+          to: String(message.to || ''),
+          text: String(message.text?.body || ''),
+          status: 'received',
+        },
+        create: {
+          wamid: String(message.id || ''),
+          from: String(message.from || ''),
+          to: String(message.to || ''),
+          text: String(message.text?.body || ''),
+          status: 'received',
+        },
+      })
+      return
+    } catch (e) {
+      console.warn('[webhooks] prisma persist failed, falling back to log:', e)
+    }
+  }
   console.log(`[webhooks] Message received from ${message.from}: ${message.text?.body || ''}`)
 }
 
 async function handleStatusUpdate(status: any): Promise<void> {
-  // TODO: Implementar con Prisma ORM
-  // await prisma.messages.update({
-  //   where: { wamid: status.id },
-  //   data: { status: status.status }
-  // })
+  const prisma = await getPrisma()
+  if (prisma) {
+    try {
+      await prisma.message.update({
+        where: { wamid: String(status.id || '') },
+        data: { status: String(status.status || 'unknown') },
+      })
+      return
+    } catch (e) {
+      // If not found, ignore and just log
+      console.warn('[webhooks] prisma status update failed, falling back to log:', e)
+    }
+  }
   console.log(`[webhooks] Message ${status.id} status: ${status.status}`)
 }
 
