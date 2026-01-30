@@ -55,8 +55,8 @@ export default async function handler(req: Request): Promise<Response> {
     const version = kvVersion || process.env.WHATSAPP_GRAPH_VERSION || 'v24.0'
     const kvToken = await kvGet('wa:access_token')
     const kvPhone = await kvGet('wa:phone_number_id')
-    const token = kvToken || process.env.WHATSAPP_TOKEN
-    const phoneNumberId = kvPhone || process.env.WHATSAPP_PHONE_NUMBER_ID
+    const token = process.env.WHATSAPP_TOKEN || kvToken
+    const phoneNumberId = process.env.WHATSAPP_PHONE_NUMBER_ID || kvPhone
     if (!token || !phoneNumberId) return new Response(JSON.stringify({ ok: false, error: 'not_configured' }), { status: 500, headers: { 'Content-Type': 'application/json', ...CORS_HEADERS } as any })
 
     const url = `https://graph.facebook.com/${version}/${phoneNumberId}/messages`
