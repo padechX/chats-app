@@ -21,6 +21,17 @@ export default async function handler(req: Request): Promise<Response> {
     })
   }
   try {
+    const url = new URL(req.url)
+    const debug = url.searchParams.get('debug')
+    if (debug === '1') {
+      const token = (process.env.WHATSAPP_TOKEN || '')
+      const suffix = token ? token.slice(-8) : null
+      const phoneId = process.env.WHATSAPP_PHONE_NUMBER_ID || null
+      return new Response(
+        JSON.stringify({ ok: true, debug: { token_suffix: suffix, phone_number_id: phoneId } }),
+        { status: 200, headers: { 'Content-Type': 'application/json', ...CORS_HEADERS } as any }
+      )
+    }
     return new Response(JSON.stringify({ ok: true }), { 
       status: 200, 
       headers: { 'Content-Type': 'application/json', ...CORS_HEADERS } as any 
