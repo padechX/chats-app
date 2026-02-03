@@ -1,8 +1,8 @@
-import { PrismaClient } from '@prisma/client'
+type PrismaClientAny = any
 
-let prismaInstance: PrismaClient | null = null
+let prismaInstance: PrismaClientAny | null = null
 
-export async function getPrisma(): Promise<PrismaClient | null> {
+export async function getPrisma(): Promise<PrismaClientAny | null> {
   try {
     if (!process.env.DATABASE_URL) {
       console.warn('[prisma] DATABASE_URL not set, skipping')
@@ -10,6 +10,9 @@ export async function getPrisma(): Promise<PrismaClient | null> {
     }
     
     if (!prismaInstance) {
+      const mod: any = await import('@prisma/client')
+      const PrismaClient = mod?.PrismaClient
+      if (!PrismaClient) return null
       prismaInstance = new PrismaClient()
     }
     

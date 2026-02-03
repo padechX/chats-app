@@ -8,16 +8,6 @@ const CORS_HEADERS = {
   'Access-Control-Allow-Headers': 'Content-Type, Authorization',
 }
 
-async function kvGet(key: string): Promise<any | null> {
-  const KV_URL = process.env.KV_REST_API_URL
-  const KV_TOKEN = process.env.KV_REST_API_TOKEN
-  if (!KV_URL || !KV_TOKEN) return null
-  const r = await fetch(`${KV_URL}/get/${encodeURIComponent(key)}`, { headers: { Authorization: `Bearer ${KV_TOKEN}` } })
-  if (!r.ok) return null
-  const js: any = await r.json().catch(() => null)
-  try { return js?.result ? JSON.parse(js.result) : null } catch { return null }
-} 
-
 export default async function handler(req: Request): Promise<Response> {
   if (req.method === 'OPTIONS') {
     return new Response(null, { status: 204, headers: CORS_HEADERS as any })
@@ -51,12 +41,9 @@ export default async function handler(req: Request): Promise<Response> {
     }
     if (!to || !text) return new Response(JSON.stringify({ ok: false, error: 'invalid_params' }), { status: 400, headers: { 'Content-Type': 'application/json', ...CORS_HEADERS } as any })
 
-    const kvVersion = await kvGet('wa:graph_version')
-    const version = kvVersion || process.env.WHATSAPP_GRAPH_VERSION || 'v24.0'
-    const kvToken = await kvGet('wa:access_token')
-    const kvPhone = await kvGet('wa:phone_number_id')
-    const token = process.env.WHATSAPP_TOKEN || kvToken
-    const phoneNumberId = process.env.WHATSAPP_PHONE_NUMBER_ID || kvPhone
+    const version = process.env.WHATSAPP_GRAPH_VERSION || 'v24.0'
+    const token = process.env.WHATSAPP_TOKEN
+    const phoneNumberId = process.env.WHATSAPP_PHONE_NUMBER_ID
     if (!token || !phoneNumberId) return new Response(JSON.stringify({ ok: false, error: 'not_configured' }), { status: 500, headers: { 'Content-Type': 'application/json', ...CORS_HEADERS } as any })
 
     const url = `https://graph.facebook.com/${version}/${phoneNumberId}/messages`

@@ -29,38 +29,10 @@ export default async function handler(req: Request): Promise<Response> {
       const envSuffix = envToken ? envToken.slice(-8) : null
       const envPhoneId = process.env.WHATSAPP_PHONE_NUMBER_ID || null
 
-      // KV values (if configured)
-      let kvSuffix: string | null = null
-      let kvPhoneId: string | null = null
-      try {
-        const KV_URL = process.env.KV_REST_API_URL
-        const KV_TOKEN = process.env.KV_REST_API_TOKEN
-        if (KV_URL && KV_TOKEN) {
-          const hdrs = { Authorization: `Bearer ${KV_TOKEN}` }
-          const [tokRes, phoneRes] = await Promise.all([
-            fetch(`${KV_URL}/get/${encodeURIComponent('wa:access_token')}`, { headers: hdrs }),
-            fetch(`${KV_URL}/get/${encodeURIComponent('wa:phone_number_id')}`, { headers: hdrs }),
-          ])
-          if (tokRes.ok) {
-            const js: any = await tokRes.json().catch(() => null)
-            const v = js?.result ? JSON.parse(js.result) : null
-            if (v && typeof v === 'string') kvSuffix = v.slice(-8)
-          }
-          if (phoneRes.ok) {
-            const js: any = await phoneRes.json().catch(() => null)
-            const v = js?.result ? JSON.parse(js.result) : null
-            if (v && typeof v === 'string') kvPhoneId = v
-          }
-        }
-      } catch {}
-
-      // Effective source matches current send.ts selection (KV first, then ENV)
-      const effectiveSource = kvSuffix ? 'kv' : 'env'
-      const effectiveSuffix = kvSuffix || envSuffix
-      const effectivePhoneId = kvPhoneId || envPhoneId
+      const version = process.env.WHATSAPP_GRAPH_VERSION || null
 
       return new Response(
-        JSON.stringify({ ok: true, debug: { env_token_suffix: envSuffix, kv_token_suffix: kvSuffix, effective_source: effectiveSource, effective_token_suffix: effectiveSuffix, phone_number_id: effectivePhoneId } }),
+        JSON.stringify({ ok: true, debug: { env_token_suffix: envSuffix, phone_number_id: envPhoneId, graph_version: version } }),
         { status: 200, headers: { 'Content-Type': 'application/json', ...CORS_HEADERS } as any }
       )
     }
