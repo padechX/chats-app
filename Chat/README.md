@@ -23,9 +23,10 @@ En Render va esta configuracion:
 - **Build command**: npm install
 - **Start command**: npm start
 
-<kbd>
-![alt text](image-1.png)
-</kbd>
+
+| ![alt text](image-1.png) |
+| :--: |
+
 
 Pon estas en el panel de Render (Environment):
 
@@ -40,9 +41,8 @@ Pon estas en el panel de Render (Environment):
 - `WHATSAPP_GRAPH_VERSION` (opcional)
   - Ej: `v24.0`.
 
-<kbd>
-![alt text](image.png)
-</kbd>
+| ![alt text](image.png) |
+| :--: |
 
 ## Qué URL poner en Meta (webhook)
 
