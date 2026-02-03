@@ -11,7 +11,18 @@ Backend para WhatsApp. Está pensado para correr en **Render** como servicio Nod
 Con eso Render hace `npm install` y `npm start` y listo.
 
 
-## Variables de entorno para Render (Environment Variables)
+## Variables de entorno para Render y Configuracion (Environment Variables)
+
+En Render va esta configuracion:
+
+- **Name** : A eleccion
+- **Languaje**: Node
+- **Branch**: main
+- **Region**: A eleccion
+- **Root directory**: Chat/
+- **Build command**: npm install
+- **Start command**: npm start
+![alt text](image-1.png)
 
 Pon estas en el panel de Render (Environment):
 
