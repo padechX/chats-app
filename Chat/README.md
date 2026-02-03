@@ -23,26 +23,29 @@ En Render va esta configuracion:
 - **Build command**: npm install
 - **Start command**: npm start
 
-
-> | ![alt text](image-1.png) |
-> | :--: |
+<div align="center">
+ | ![alt text](image-1.png) |
+ | :--: |
+</div>
 
 
 Pon estas en el panel de Render (Environment):
 
-- `WHATSAPP_TOKEN`
+- **WHATSAPP_TOKEN**
   - Token de WhatsApp Cloud API (permanente si puedes). Si lo cambias, el envío/descarga de media deja de funcionar.
-- `WHATSAPP_PHONE_NUMBER_ID`
+- **WHATSAPP_PHONE_NUMBER_ID**
   - El Phone Number ID de tu número de WhatsApp Cloud.
-- `WHATSAPP_WEBHOOK_VERIFY_TOKEN`
+- **WHATSAPP_WEBHOOK_VERIFY_TOKEN**
   - Un texto cualquiera (tipo `myspa-verify-123`) y el mismo lo pones en Meta cuando configuras el webhook.
-- `WHATSAPP_APP_SECRET` (opcional pero recomendado)
+- **WHATSAPP_APP_SECRET** (opcional pero recomendado)
   - App Secret de Meta. Si lo pones, el webhook valida la firma `x-hub-signature-256`.
-- `WHATSAPP_GRAPH_VERSION` (opcional)
+- **WHATSAPP_GRAPH_VERSION** (opcional)
   - Ej: `v24.0`.
 
-> | ![alt text](image.png) |
-> | :--: |
+<div align="center">
+ | ![alt text](image.png) |
+ | :--: |
+</div>
 
 ## Qué URL poner en Meta (webhook)
 
@@ -50,4 +53,4 @@ En Meta (WhatsApp -> Configuration -> Webhooks), la URL te queda:
 
 `https://"URL de Render".onrender.com/api/whatsapp/webhooks`
 
-Y el verify token es el valor de `WHATSAPP_WEBHOOK_VERIFY_TOKEN`.
+Y el verify token es el valor de **WHATSAPP_WEBHOOK_VERIFY_TOKEN**.
