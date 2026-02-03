@@ -1,8 +1,8 @@
 # MySpa Social Backend (Render)
 
-Backend mini para WhatsApp Cloud API. Está pensado para correr en **Render** como servicio Node (siempre encendido).
+Backend para WhatsApp. Está pensado para correr en **Render** como servicio Node (siempre encendido).
 
-## Qué tiene que haber en el repo (carpeta `Chat/`)
+## Qué tiene que haber en el repo de Github(carpeta `Chat/`)
 
 - `server.js`
 - `package.json`
@@ -10,22 +10,8 @@ Backend mini para WhatsApp Cloud API. Está pensado para correr en **Render** co
 
 Con eso Render hace `npm install` y `npm start` y listo.
 
-## Endpoints
 
-- `GET /api/health` (o `GET /api/whatsapp/health`)
-- `GET|POST /api/whatsapp/webhooks` (también vale `/api/whatsapp/webhook`)
-- `POST /api/whatsapp/send`
-- `GET /api/whatsapp/messages?status=pending|processed`
-- `POST /api/whatsapp/messages/<id>/ack`
-- `GET /api/whatsapp/media/<mediaId>` (descarga binario)
-- `POST /api/whatsapp/media/upload` (sube base64 y devuelve `id`)
-
-Notas rápidas:
-
-- La “bandeja” de mensajes es **en memoria** (si Render reinicia, se vacía).
-- Para multimedia entrante, en `messages` te llega `media: { id, type, mime_type, filename, caption... }` y con ese `id` llamas a `/media/<id>`.
-
-## Variables de entorno (Render)
+## Variables de entorno para Render (Environment Variables)
 
 Pon estas en el panel de Render (Environment):
 
@@ -40,12 +26,12 @@ Pon estas en el panel de Render (Environment):
 - `WHATSAPP_GRAPH_VERSION` (opcional)
   - Ej: `v24.0`.
 
-No hace falta configurar `PORT`. Render lo pone solo.
+![alt text](image.png)
 
 ## Qué URL poner en Meta (webhook)
 
 En Meta (WhatsApp -> Configuration -> Webhooks), la URL te queda:
 
-`https://TU-SERVICIO.onrender.com/api/whatsapp/webhooks`
+`https://"URL de Render".onrender.com/api/whatsapp/webhooks`
 
 Y el verify token es el valor de `WHATSAPP_WEBHOOK_VERIFY_TOKEN`.
