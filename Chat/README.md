@@ -8,28 +8,40 @@ Backend para WhatsApp. Está pensado para correr en **Render** como servicio Nod
 - `package.json`
 - `README.md` (esto)
 
-Con eso Render hace `npm install` y `npm start` y listo.
+## En Koyeb Creas una cuenta gratuita y un espacio de trabajo
+
+**Luego**: 
+1 - Seleccionas Web Service y clic en el boton de Github
+
+> | ![alt text](image-3.png) |
+> | :--: |
+
+2 - Copias el enlace HTTPS de tu repo de Github
+
+> | ![alt text](image-4.png) |
+> | :--: |
+
+3 - Pones el enlace HTTPS en la URL del repo de Github y clic en Import
+
+> | ![alt text](image-5.png) |
+> | :--: |
+
+4 - Luego despliegas **Customize BuildPack Settings** y activas **Override** agregando `npm install` en **Build Command** y `npm start` en **Start Command** y despues **Next**
+
+> | ![alt text](image-6.png) |
+> | :--: |
+
+5 - Lo siguiente es seleccionar el plan. Para la prueba está bien el Free
+
+> | ![alt text](image-7.png) |
+> | :--: |
 
 
-## Variables de entorno para Render y Configuracion (Environment Variables)
+6 - Luego entramos en **Environment Variables** y creamos las variables de entorno
 
-En Render va esta configuracion:
+> | ![alt text](image-9.png) |
+> | :--: |
 
-- **Name** : A eleccion
-- **Languaje**: Node
-- **Branch**: main
-- **Region**: A eleccion
-- **Root directory**: Chat/
-- **Build command**: npm install
-- **Start command**: npm start
-
-<div align="center">
- | ![alt text](image-1.png) |
- | :--: |
-</div>
-
-
-Pon estas en el panel de Render (Environment):
 
 - **WHATSAPP_TOKEN**
   - Token de WhatsApp Cloud API (permanente si puedes). Si lo cambias, el envío/descarga de media deja de funcionar.
@@ -42,10 +54,6 @@ Pon estas en el panel de Render (Environment):
 - **WHATSAPP_GRAPH_VERSION** (opcional)
   - Ej: `v24.0`.
 
-<div align="center">
- | ![alt text](image.png) |
- | :--: |
-</div>
 
 ## Qué URL poner en Meta (webhook)
 
@@ -54,3 +62,8 @@ En Meta (WhatsApp -> Configuration -> Webhooks), la URL te queda:
 `https://"URL de Render".onrender.com/api/whatsapp/webhooks`
 
 Y el verify token es el valor de **WHATSAPP_WEBHOOK_VERIFY_TOKEN**.
+
+
+## Luego mas abajo pinchas en Deploy Web Service
+> | ![alt text](image-2.png) |
+> | :--: |
