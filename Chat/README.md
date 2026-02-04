@@ -8,33 +8,24 @@ Backend para WhatsApp. Está pensado para correr en **Render** como servicio Nod
 - `package.json`
 - `README.md` (esto)
 
-## En Koyeb Creas una cuenta gratuita y un espacio de trabajo
+## En CloudFlare Workers Creas una cuenta gratuita
 
 **Luego**: 
-1 - Seleccionas Web Service y clic en el boton de Github
+1 - Clic en el boton de Github para conectar el repo. na vez conectado, le cliqueas nuevamente en el icono de github
+
+> | ![alt text](image.png) |
+> | :--: |
+
+> | ![alt text](image-1.png) |
+> | :--: |
+
+2 - Selecciono el Repo de Github (en caso que hayas dado acceso a todos los repositorios) y clic a siguiente
 
 > | ![alt text](image-3.png) |
 > | :--: |
 
-2 - Copias el enlace HTTPS de tu repo de Github
 
-> | ![alt text](image-4.png) |
-> | :--: |
 
-3 - Pones el enlace HTTPS en la URL del repo de Github y clic en Import
-
-> | ![alt text](image-5.png) |
-> | :--: |
-
-4 - Luego despliegas **Customize BuildPack Settings** y activas **Override** agregando `npm install` en **Build Command** y `npm start` en **Start Command** y despues **Next**
-
-> | ![alt text](image-6.png) |
-> | :--: |
-
-5 - Lo siguiente es seleccionar el plan. Para la prueba está bien el Free
-
-> | ![alt text](image-7.png) |
-> | :--: |
 
 
 6 - Luego entramos en **Environment Variables** y creamos las variables de entorno
