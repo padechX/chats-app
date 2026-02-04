@@ -1,6 +1,17 @@
-# MySpa Social Backend (Render)
+## App en Facebook Developers para conectar WhatsApp, Facebook e Instagram
 
-Backend para WhatsApp. Está pensado para correr en **Render** como servicio Node (siempre encendido).
+1 - Entra y login con tu cuenta de Facebook o crea una en https://developers.facebook.com/
+
+
+2 - **Crear App**
+
+> | ![alt text](image-9.png) | > |
+> | :--: |
+
+
+# MySpa Social Backend 
+
+Backend para WhatsApp. Está pensado para correr en **CloudFlare Workers** como servicio Node (siempre encendido).
 
 ## Qué tiene que haber en el repo de Github(carpeta `Chat/`)
 
@@ -25,12 +36,20 @@ Backend para WhatsApp. Está pensado para correr en **Render** como servicio Nod
 > | :--: |
 
 
+3 - Siguiente ventana; 
+    - **Build Command**: npm install
+    - **Path**: Chat
+
+> | ![alt text](image-5.png) |
+> | :--: |
+
+> | ![alt text](image-6.png) |
+> | :--: |
 
 
+Mas abajo en **Name variable** vas agregando las variables de entorno
 
-6 - Luego entramos en **Environment Variables** y creamos las variables de entorno
-
-> | ![alt text](image-9.png) |
+> | ![alt text](image-7.png) |
 > | :--: |
 
 
