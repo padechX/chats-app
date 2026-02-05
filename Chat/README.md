@@ -24,9 +24,15 @@ Aqui un video Ejemplo de Youtube:  https://www.youtube.com/watch?v=nivLx2_FJ60
 
 ## 3 - En CloudFlare Workers Creas una cuenta gratuita [-> Cloudflare <-](https://dash.cloudflare.com/sign-up)
 
-Estando en el **Dashboard** de CloudFlare, selecciona **Workers** y luego **Create a Worker**.
+Estando en el **Dashboard** de CloudFlare, selecciona en **Add** / **Workers** y luego **Create a Worker**.
 
-> | ![alt text](image.png) |
+> | ![alt text](image.png) 
+
+
+
+En las siguientes opciones, selecciona **Start With Hellow World**
+
+> | ![alt text](image-1.png) |
 > | :-------: |
 
 
