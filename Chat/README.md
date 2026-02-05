@@ -1,6 +1,28 @@
-## App en Facebook Developers para conectar WhatsApp, Facebook e Instagram
 
-1 - Entra y login con tu cuenta de Facebook o crea una en https://developers.facebook.com/
+
+# MySpa Social Backend 
+
+Backend para WhatsApp. Está pensado para correr en **CloudFlare Workers** como servicio Node (siempre encendido).
+
+## 1 - Qué tiene que haber en el repo de Github(carpeta `Chat/`)
+
+- `server.js`
+- `package.json`
+- `README.md` (esto)
+
+
+## 2 App en Facebook Developers para conectar WhatsApp, Facebook e Instagram
+
+2.a - Primero debes crear una **FanPage** en **Facebook** sobre el negocio y agregar datos sobre el mismo. Tambien conectar con una cuenta de **Instagram**. Esto es necesario para crear el **Portfolio Comercial** y podeer acceder a la API de Facebook, Instagram y Whatsapp
+
+2.b - Entra y login con tu cuenta de Facebook o crea una cuenta en https://developers.facebook.com/
+
+Aqui un video Ejemplo de Youtube:
+
+> | https://www.youtube.com/watch?v=nivLx2_FJ60 |
+> | :--: |
+
+
 
 
 2 - **Crear App**
@@ -9,48 +31,10 @@
 > | :--: |
 
 
-# MySpa Social Backend 
-
-Backend para WhatsApp. Está pensado para correr en **CloudFlare Workers** como servicio Node (siempre encendido).
-
-## Qué tiene que haber en el repo de Github(carpeta `Chat/`)
-
-- `server.js`
-- `package.json`
-- `README.md` (esto)
-
-## En CloudFlare Workers Creas una cuenta gratuita
-
-**Luego**: 
-1 - Clic en el boton de Github para conectar el repo. na vez conectado, le cliqueas nuevamente en el icono de github
-
-> | ![alt text](image.png) |
-> | :--: |
-
-> | ![alt text](image-1.png) |
-> | :--: |
-
-2 - Selecciono el Repo de Github (en caso que hayas dado acceso a todos los repositorios) y clic a siguiente
-
-> | ![alt text](image-3.png) |
-> | :--: |
-
-
-3 - Siguiente ventana; 
-    - **Build Command**: npm install
-    - **Path**: Chat
-
-> | ![alt text](image-5.png) |
-> | :--: |
-
-> | ![alt text](image-6.png) |
-> | :--: |
+## En CloudFlare Workers Creas una cuenta gratuita [-> Cloudflare <-](https://dash.cloudflare.com/sign-up)
 
 
 Mas abajo en **Name variable** vas agregando las variables de entorno
-
-> | ![alt text](image-7.png) |
-> | :--: |
 
 
 - **WHATSAPP_TOKEN**
@@ -64,16 +48,3 @@ Mas abajo en **Name variable** vas agregando las variables de entorno
 - **WHATSAPP_GRAPH_VERSION** (opcional)
   - Ej: `v24.0`.
 
-
-## Qué URL poner en Meta (webhook)
-
-En Meta (WhatsApp -> Configuration -> Webhooks), la URL te queda:
-
-`https://"URL de Render".onrender.com/api/whatsapp/webhooks`
-
-Y el verify token es el valor de **WHATSAPP_WEBHOOK_VERIFY_TOKEN**.
-
-
-## Luego mas abajo pinchas en Deploy Web Service
-> | ![alt text](image-2.png) |
-> | :--: |

@@ -1,18 +1,10 @@
-// Cloudflare Worker entry with Durable Object for minimal WhatsApp backend
-// Endpoints:
-// - GET|POST /api/whatsapp/webhooks
-// - POST /api/whatsapp/send
-// - GET /api/whatsapp/messages?status=pending
-// - POST /api/whatsapp/messages/:id/ack
-// - GET /api/whatsapp/media/:mediaId
-// - POST /api/whatsapp/media/upload
 
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url)
     const path = url.pathname
 
-    // Simple router
+    
     if (path === '/api/whatsapp/webhooks' || path === '/api/whatsapp/webhook') {
       if (request.method === 'GET') return handleWebhookVerify(url, env)
       if (request.method === 'POST') return handleWebhookPost(request, env)
@@ -45,14 +37,14 @@ export default {
   }
 }
 
-// Durable Object binding name: MESSAGE_QUEUE
+
 export class MessageQueue {
   constructor(state, env) {
     this.state = state
     this.env = env
   }
 
-  // messages are stored as a map: id -> message
+  
   async fetch(request) {
     const url = new URL(request.url)
     const path = url.pathname
@@ -72,7 +64,7 @@ export class MessageQueue {
         if (!v) continue
         if (!status || v.status === status) list.push(v)
       }
-      // cap to latest 100
+      
       list.sort((a,b)=> (a.timestamp||0) - (b.timestamp||0))
       return json(list.slice(-100))
     }
@@ -91,7 +83,7 @@ export class MessageQueue {
   }
 }
 
-// Helpers
+
 function json(data, status = 200, headers = {}) {
   return new Response(JSON.stringify(data), { status, headers: { 'content-type': 'application/json; charset=utf-8', ...headers } })
 }
@@ -121,7 +113,7 @@ async function handleWebhookVerify(url, env) {
 }
 
 async function handleWebhookPost(request, env) {
-  // Optional signature verification
+  
   if (env.WHATSAPP_APP_SECRET) {
     const ok = await verifyMetaSignature(request, env.WHATSAPP_APP_SECRET)
     if (!ok) return new Response('Invalid signature', { status: 401 })
@@ -205,7 +197,7 @@ async function handleSend(request, env) {
   let finalType = type || (text ? 'text' : 'image')
   let payload
 
-  // If base64 provided, upload first to get media_id
+  
   let mid = media_id
   if (!mid && media_base64) {
     const up = await handleMediaUpload(new Request('https://internal', { method: 'POST', body: JSON.stringify({ base64: media_base64, filename, mime_type }), headers: { 'content-type': 'application/json' } }), env)
@@ -216,7 +208,7 @@ async function handleSend(request, env) {
   if (finalType === 'text') {
     payload = { messaging_product: 'whatsapp', to, type: 'text', text: { body: text } }
   } else {
-    // media types via id or link
+    
     const comp = mid ? { id: mid } : { link: media_link }
     payload = { messaging_product: 'whatsapp', to, type: finalType, [finalType]: comp }
     if (filename && finalType === 'document') payload.document.filename = filename
@@ -236,7 +228,7 @@ async function handleSend(request, env) {
 }
 
 async function handleMediaDownload(mediaId, env) {
-  // Step 1: resolve URL
+
   const meta = await fetch(`${getGraphBase(env)}/${mediaId}`, {
     headers: { Authorization: `Bearer ${env.WHATSAPP_TOKEN}` }
   })
@@ -245,7 +237,7 @@ async function handleMediaDownload(mediaId, env) {
   const url = j.url
   const bin = await fetch(url, { headers: { Authorization: `Bearer ${env.WHATSAPP_TOKEN}` } })
   const h = new Headers()
-  // preserve content-type and disposition if present
+  
   const ct = bin.headers.get('content-type')
   if (ct) h.set('content-type', ct)
   const cd = bin.headers.get('content-disposition')
@@ -276,7 +268,7 @@ async function handleMediaUpload(request, env) {
 }
 
 function base64ToUint8Array(b64) {
-  // support with/without data URL prefix
+  
   const idx = b64.indexOf(',')
   const data = idx >= 0 ? b64.slice(idx + 1) : b64
   const binary = atob(data)
