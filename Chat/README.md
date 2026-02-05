@@ -32,8 +32,12 @@ Estando en el **Dashboard** de CloudFlare, selecciona en **Add** / **Workers** y
 
 En las siguientes opciones, selecciona **Start With Hellow World**
 
-> | ![alt text](image-1.png) |
-> | :-------: |
+![alt text](image-1.png)
+
+
+<img src="image-1.png" alt="Start with Hello World" width="600">
+
+
 
 
 Mas abajo en **Name variable** vas agregando las variables de entorno
