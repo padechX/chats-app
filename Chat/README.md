@@ -35,8 +35,10 @@ En las siguientes opciones, selecciona **Start With Hellow World**
 ![alt text](image-1.png)
 
 
-<img src="image-1.png" alt="Start with Hello World" width="600">
 
+<p align="center">
+  <img src="image-1.png" width="600">
+</p>
 
 
 
