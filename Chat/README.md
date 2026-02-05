@@ -26,26 +26,19 @@ Aqui un video Ejemplo de Youtube:  https://www.youtube.com/watch?v=nivLx2_FJ60
 
 Estando en el **Dashboard** de CloudFlare, selecciona en **Add** / **Workers** y luego **Create a Worker**.
 
-> | ![alt text](image.png) 
+<p align="center">
+  <img src="image.png" width="600">
+</p>
 
 
 
 En las siguientes opciones, selecciona **Start With Hellow World**
 
-![alt text](image-1.png)
-
-
-
 <p align="center">
   <img src="image-1.png" width="600">
 </p>
 
-<p align="center">
-  <img src="image-1.png"
-       alt="Start with Hello World"
-       width="600"
-       style="border:1px solid #ec1d1dff; border-radius:6px;">
-</p>
+
 
 
 
