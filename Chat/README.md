@@ -11,27 +11,18 @@ Backend para WhatsApp. Está pensado para correr en **CloudFlare Workers** como 
 - `README.md` (esto)
 
 
-## 2 App en Facebook Developers para conectar WhatsApp, Facebook e Instagram
+## 2 - App en Facebook Developers para conectar WhatsApp, Facebook e Instagram
 
-2.a - Primero debes crear una **FanPage** en **Facebook** sobre el negocio y agregar datos sobre el mismo. Tambien conectar con una cuenta de **Instagram**. Esto es necesario para crear el **Portfolio Comercial** y podeer acceder a la API de Facebook, Instagram y Whatsapp
+**2.a** - Primero debes crear una **FanPage** en **Facebook** sobre el negocio y agregar datos sobre el mismo. Tambien conectar con una cuenta de **Instagram**. Esto es necesario para crear el **Portfolio Comercial** y podeer acceder a la API de Facebook, Instagram y Whatsapp
 
-2.b - Entra y login con tu cuenta de Facebook o crea una cuenta en https://developers.facebook.com/
+**2.b** - Entra y haz login con tu cuenta de Facebook o crea una cuenta de desarrollador y crea una App en https://developers.facebook.com/ 
 
-Aqui un video Ejemplo de Youtube:
-
-> | https://www.youtube.com/watch?v=nivLx2_FJ60 |
-> | :--: |
+Aqui un video Ejemplo de Youtube:  https://www.youtube.com/watch?v=nivLx2_FJ60 
 
 
 
 
-2 - **Crear App**
-
-> | ![alt text](image-9.png) | > |
-> | :--: |
-
-
-## En CloudFlare Workers Creas una cuenta gratuita [-> Cloudflare <-](https://dash.cloudflare.com/sign-up)
+## 3 - En CloudFlare Workers Creas una cuenta gratuita [-> Cloudflare <-](https://dash.cloudflare.com/sign-up)
 
 
 Mas abajo en **Name variable** vas agregando las variables de entorno
