@@ -9,6 +9,7 @@ Backend para WhatsApp. Está pensado para correr en **CloudFlare Workers** como 
 - `server.js`
 - `package.json`
 - `README.md` (esto)
+- `worker.js` (el archivo que reemplazas en CloudFlare)
 
 
 ## 2 - App en Facebook Developers para conectar WhatsApp, Facebook e Instagram
@@ -37,6 +38,26 @@ En las siguientes opciones, selecciona **Start With Hellow World**
 <p align="center">
   <img src="image-1.png" width="600">
 </p>
+
+Acontinuacion, Cambia el nombre del **Worker** y pulsa en **Deploy**
+
+<p align="center">
+  <img src="image-2.png" width="600">
+</p>
+
+Luego te lleva de vuelta al **Dashboar/Workers & Pages** y pulsa en **Edit code**
+
+<p align="center">
+  <img src="image-3.png" width="600">
+</p>
+
+Reemplaza el contenido de **Worker** por el contenido del archivo **worker.js** que está en el repo
+
+<p align="center">
+<img src="image-4.png" width="600">
+</p>
+
+
 
 
 
