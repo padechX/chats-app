@@ -43,13 +43,10 @@ En las siguientes opciones, selecciona **Start With Hellow World**
 <p align="center">
   <img src="image-1.png"
        alt="Start with Hello World"
-       width="650"
-       style="
-         border:1px solid #e1e4e8;
-         border-radius:8px;
-         padding:6px;
-         background:#fff;">
+       width="600"
+       style="border:1px solid #ec1d1dff; border-radius:6px;">
 </p>
+
 
 
 Mas abajo en **Name variable** vas agregando las variables de entorno
